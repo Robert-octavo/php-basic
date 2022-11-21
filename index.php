@@ -1,59 +1,42 @@
-<!DOCTYPE html>
+<?php require( 'init.php' ); ?>
 
 <?php 
 
-error_reporting( E_ALL );
-ini_set( 'display_errors', 1);
+$all_posts = get_all_posts();
 
-function get_post_1_titulo() {
-	return 'Lorem Ipsum dolor sit amet';
+$post_found = false;
+if ( isset( $_GET['view'] ) ) {
+	$post_found = get_post( $_GET['view'] );
+	if ( $post_found ) {
+		$all_posts = [ $post_found ];
+	}
 }
-function get_post_2_titulo() {
-	return 'Mauris lobortis, turpis sit amet pulvinar hendrerit';
-}
-function get_post_1_contenido(){
-	return 'Vero quam reprehenderit, expedita libero esse in exercitationem nisi similique maiores saepe accusamus repudiandae rem natus officia, reiciendis provident corrupti perferendis harum?';
-}
-function get_post_2_contenido(){
-	return 'Temporibus, odio amet esse laudantium corrupti libero necessitatibus harum tempore. Consequuntur consequatur aliquam error aperiam doloremque quasi nisi, culpa ex quia deserunt.';
-}
+
 ?>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Micro CMS</title>
-	<link rel="stylesheet" href="assets/style.css"></head>
-<body>
+<?php require( 'templates/header.php'); ?>
 
-<nav id="site-navigation" role="navigation" class="row row-center">
-	<div class="column">
-		<h1>
-			<a href="index.php">Micro CMS</a>
-		</h1>
-		<ul class="main-menu column clearfix">
-		</ul>
+		<?php foreach ( $all_posts as $post ): ?>
+			<article class="post">
+				<header>
+					<h2 class="post-title">
+						<a href="?view=<?php echo $post['id']; ?>"><?php echo $post['title'];?></a>
+					</h2>
+				</header>
+				<div class="post-content">
+					<?php if ( $post_found ): ?>
+						<?php echo $post['content']; ?>
+					<?php else: ?>
+						<?php echo $post['excerpt'];?>
+					<?php endif; ?>
+				</div>
+				<footer>
+					<span class="post-date">
+						Publicada en:
+						<?php echo strftime( '%d %b %Y', strtotime( $post['published_on'] ) ); ?>
+					</span>
+				</footer>
+			</article>
+		<?php endforeach; ?>
 	</div>
-</nav>
 
-<div id="content" >
-	<div class="post">
-		<div>
-			<h2><?php echo get_post_1_titulo(); ?></h2>
-			<div><?php echo get_post_1_contenido(); ?></div>
-		</div>
-		<div>
-			<h2><?php echo get_post_2_titulo(); ?></h2>
-			<div><?php echo get_post_2_contenido(); ?></div>
-		</div>
-	</div>
-</div>
-
-<footer id="footer">
-	<div id="inner-footer">
-		Curso de Introducción a PHP en Domestika
-	</div>
-</footer>
-</body>
-</html>
+<?php require( 'templates/footer.php'); ?>

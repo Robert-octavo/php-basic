@@ -1,10 +1,19 @@
 <?php
 
-    // Configurar la salida de errores por pantalla
-error_reporting( E_ALL );
-ini_set( 'display_errors', 1);
+if ( ! file_exists( 'config.php' ) ) {
+    die( 'ERROR: No existe config.php' );
+}
 
-setlocale( LC_TIME, 'es', 'spa', 'es_ES' );
+require( 'config.php' );
+
+setlocale( LC_TIME, SITE_LANG );
 date_default_timezone_get();
 
+$app_db = mysqli_connect( DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, DB_PORT );
+if ( $app_db === false ) {
+    die( 'Error al conectar con la base de datos' );
+}
+
+
 require('inc/posts.php'); 
+require('inc/helpers.php'); 

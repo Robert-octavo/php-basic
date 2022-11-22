@@ -2,6 +2,13 @@
 
 <?php 
 
+if ( isset( $_GET['delete-post'] ) ) {
+	$id = $_GET['delete-post'];
+	delete_post( $id );
+	redirect_to( 'index.php' );
+	die();
+}
+
 $all_posts = get_all_posts();
 
 $post_found = false;
@@ -14,7 +21,12 @@ if ( isset( $_GET['view'] ) ) {
 
 ?>
 <?php require( 'templates/header.php'); ?>
-
+<?php if ( isset( $_GET['success'] ) ): ?>
+	<div class="success">
+		El post ha sido creado
+	</div>
+<?php endif; ?>
+	<div class="posts">
 		<?php foreach ( $all_posts as $post ): ?>
 			<article class="post">
 				<header>
@@ -34,9 +46,11 @@ if ( isset( $_GET['view'] ) ) {
 						Publicada en:
 						<?php echo strftime( '%d %b %Y', strtotime( $post['published_on'] ) ); ?>
 					</span>
+					<div class="delete-post">
+						<a href="?delete-post=<?php echo $post['id'];?>">Eliminar post</a>
+					</div>
 				</footer>
 			</article>
 		<?php endforeach; ?>
 	</div>
-
 <?php require( 'templates/footer.php'); ?>
